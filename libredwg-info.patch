@@ -1,0 +1,14 @@
+--- libredwg-0.11.1/doc/LibreDWG.texi.orig	2020-11-16 20:30:48.000000000 +0100
++++ libredwg-0.11.1/doc/LibreDWG.texi	2020-12-08 21:02:13.971783937 +0100
+@@ -26,9 +26,9 @@
+ @end quotation
+ @end copying
+ 
+-@dircategory Libraries
++@dircategory Libraries:
+ @direntry
+-* LibreDWG: (LibreDWG).         Free implementation of the DWG file format.
++* LibreDWG: (LibreDWG).			Free implementation of the DWG file format
+ @end direntry
+ 
+ @titlepage

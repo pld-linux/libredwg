@@ -1,0 +1,13 @@
+--- libredwg-0.11.1/bindings/perl/MANIFEST.orig	1970-01-01 01:00:00.000000000 +0100
++++ libredwg-0.11.1/bindings/perl/MANIFEST	2020-12-08 19:47:31.306068620 +0100
+@@ -0,0 +1,5 @@
++LibreDWG.c
++LibreDWG.pm
++MANIFEST
++Makefile.PL
++t/0_basic.t
+--- libredwg-0.11.1/bindings/perl/t/0_basic.t.orig	1970-01-01 01:00:00.000000000 +0100
++++ libredwg-0.11.1/bindings/perl/t/0_basic.t	2020-12-08 19:48:52.275629970 +0100
+@@ -0,0 +1,2 @@
++use Test::More tests => 1;
++use_ok 'LibreDWG';

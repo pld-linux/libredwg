@@ -1,0 +1,11 @@
+--- libredwg-0.11.1/bindings/python/Makefile.am.orig	2020-01-16 23:20:42.000000000 +0100
++++ libredwg-0.11.1/bindings/python/Makefile.am	2020-12-08 21:25:20.224273962 +0100
+@@ -46,7 +46,7 @@
+ ## more magic: SWIG_PYTHON_CPPFLAGS resolves to null and python includes
+ ## are not passed to gcc via -I
+ _LibreDWG_la_CPPFLAGS = -I$(top_srcdir)/include $(AX_SWIG_PYTHON_CPPFLAGS)
+-_LibreDWG_la_LDFLAGS = -module
++_LibreDWG_la_LDFLAGS = -module -avoid-version -shared
+ _LibreDWG_la_LIBADD = ../../src/libredwg.la
+ 
+ ## not elegant, but works
