@@ -1,15 +1,14 @@
 Summary:	LibreDWG - free implementation of the DWG file format
 Summary(pl.UTF-8):	LibreDWG - wolnodostępna implementacja formatu plików DWG
 Name:		libredwg
-Version:	0.11.1
+Version:	0.12
 Release:	1
 License:	GPL v3+
 Group:		Libraries
 Source0:	https://ftp.gnu.org/gnu/libredwg/%{name}-%{version}.tar.xz
-# Source0-md5:	599d15f36e37acbdee4d751f5c965e40
-Patch0:		%{name}-missing.patch
-Patch1:		%{name}-info.patch
-Patch2:		%{name}-python.patch
+# Source0-md5:	5b102e8684333622819cc74dc8a76118
+Patch0:		%{name}-info.patch
+Patch1:		%{name}-python.patch
 URL:		http://www.gnu.org/software/libredwg/
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake >= 1:1.14
@@ -98,7 +97,6 @@ Interfejs Pythona do biblioteki LibreDWG.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 # no git-version-gen in release tarball
 %{__sed} -i -e 's/m4_esyscmd.*git-version-gen.*/[%{version}],/' configure.ac
@@ -127,6 +125,12 @@ rm -rf $RPM_BUILD_ROOT
 %{__rm} $RPM_BUILD_ROOT%{py_sitedir}/_LibreDWG.la
 %py_postclean
 
+# just example, nothing really useful
+install -d $RPM_BUILD_ROOT%{_examplesdir}/python-libredwg-%{version}
+%{__mv} $RPM_BUILD_ROOT%{_datadir}/load_dwg.py $RPM_BUILD_ROOT%{_examplesdir}/python-libredwg-%{version}
+# packaged as %doc
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/dwgadd.example
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -141,10 +145,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS README TODO
+%doc AUTHORS ChangeLog NEWS README TODO examples/dwgadd.example
 %attr(755,root,root) %{_bindir}/dwg2SVG
 %attr(755,root,root) %{_bindir}/dwg2dxf
 %attr(755,root,root) %{_bindir}/dwg2ps
+%attr(755,root,root) %{_bindir}/dwgadd
 %attr(755,root,root) %{_bindir}/dwgbmp
 %attr(755,root,root) %{_bindir}/dwgfilter
 %attr(755,root,root) %{_bindir}/dwggrep
@@ -159,6 +164,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/dwg2SVG.1*
 %{_mandir}/man1/dwg2dxf.1*
 %{_mandir}/man1/dwg2ps.1*
+%{_mandir}/man1/dwgadd.1*
 %{_mandir}/man1/dwgbmp.1*
 %{_mandir}/man1/dwgfilter.1*
 %{_mandir}/man1/dwggrep.1*
@@ -168,6 +174,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/dwgwrite.1*
 %{_mandir}/man1/dxf2dwg.1*
 %{_mandir}/man1/dxfwrite.1*
+%{_mandir}/man5/dwgadd.5*
 
 %files devel
 %defattr(644,root,root,755)
@@ -192,3 +199,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{py_sitedir}/_LibreDWG.so
 %{py_sitescriptdir}/LibreDWG.py[co]
+%{_examplesdir}/python-libredwg-%{version}
