@@ -1,12 +1,12 @@
 Summary:	LibreDWG - free implementation of the DWG file format
 Summary(pl.UTF-8):	LibreDWG - wolnodostępna implementacja formatu plików DWG
 Name:		libredwg
-Version:	0.12
+Version:	0.12.3
 Release:	1
 License:	GPL v3+
 Group:		Libraries
 Source0:	https://ftp.gnu.org/gnu/libredwg/%{name}-%{version}.tar.xz
-# Source0-md5:	5b102e8684333622819cc74dc8a76118
+# Source0-md5:	58124d482d73a385c664b2aad196a87b
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-python.patch
 URL:		http://www.gnu.org/software/libredwg/
