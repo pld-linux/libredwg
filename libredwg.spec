@@ -103,6 +103,9 @@ Interfejs Pythona do biblioteki LibreDWG.
 # no git-version-gen in release tarball
 %{__sed} -i -e 's/m4_esyscmd.*git-version-gen.*/[%{version}],/' configure.ac
 
+# disable when not running tests
+%{__sed} -i -e '/^check_PROGRAMS/ s/ llvmfuzz_standalone//' examples/Makefile.am
+
 %build
 %{__libtoolize}
 %{__aclocal} -I m4
