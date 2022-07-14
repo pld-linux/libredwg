@@ -1,15 +1,14 @@
 Summary:	LibreDWG - free implementation of the DWG file format
 Summary(pl.UTF-8):	LibreDWG - wolnodostępna implementacja formatu plików DWG
 Name:		libredwg
-Version:	0.12.4
-Release:	3
+Version:	0.12.5
+Release:	1
 License:	GPL v3+
 Group:		Libraries
 Source0:	https://ftp.gnu.org/gnu/libredwg/%{name}-%{version}.tar.xz
-# Source0-md5:	9aba1400b02db931f4ee8a1155fd2376
+# Source0-md5:	3cb1ec853a665b74924ac417698589d7
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-python.patch
-Patch2:		%{name}-sh.patch
 URL:		http://www.gnu.org/software/libredwg/
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake >= 1:1.14
@@ -98,7 +97,6 @@ Interfejs Pythona do biblioteki LibreDWG.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 # no git-version-gen in release tarball
 %{__sed} -i -e 's/m4_esyscmd.*git-version-gen.*/[%{version}],/' configure.ac
@@ -115,6 +113,10 @@ Interfejs Pythona do biblioteki LibreDWG.
 %configure \
 	--disable-silent-rules \
 	--with-perl-install=vendor
+
+# programs/dwg2ps.1 is missing in dist as of 0.12.5
+%{__make} -C src
+%{__make} -C programs regen-man
 
 %{__make}
 
