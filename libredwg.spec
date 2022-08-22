@@ -14,6 +14,7 @@ BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake >= 1:1.14
 BuildRequires:	bash
 BuildRequires:	doxygen
+BuildRequires:	help2man
 BuildRequires:	libtool >= 2:2
 BuildRequires:	libxml2-devel >= 2.0
 BuildRequires:	pcre2-8-devel
