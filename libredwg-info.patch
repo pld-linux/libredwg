@@ -1,7 +1,7 @@
---- libredwg-0.11.1/doc/LibreDWG.texi.orig	2020-11-16 20:30:48.000000000 +0100
-+++ libredwg-0.11.1/doc/LibreDWG.texi	2020-12-08 21:02:13.971783937 +0100
-@@ -26,9 +26,9 @@
- @end quotation
+--- libredwg-0.13.2/doc/LibreDWG.texi.orig	2024-02-20 17:47:10.918187965 +0100
++++ libredwg-0.13.2/doc/LibreDWG.texi	2024-02-20 17:47:42.798015257 +0100
+@@ -32,9 +32,9 @@ DWG is the native and proprietary file f
+ LibreDWG is neither associated with Autodesk, nor with the Open Design Alliance.
  @end copying
  
 -@dircategory Libraries

@@ -1,16 +1,20 @@
+#
+# Conditional build:
+%bcond_without	static_libs	# static library
+
 Summary:	LibreDWG - free implementation of the DWG file format
 Summary(pl.UTF-8):	LibreDWG - wolnodostępna implementacja formatu plików DWG
 Name:		libredwg
-Version:	0.12.5
-Release:	3
+Version:	0.13.2
+Release:	1
 License:	GPL v3+
 Group:		Libraries
 Source0:	https://ftp.gnu.org/gnu/libredwg/%{name}-%{version}.tar.xz
-# Source0-md5:	3cb1ec853a665b74924ac417698589d7
+# Source0-md5:	ce030298937420643f2f27480b621908
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-python.patch
 URL:		http://www.gnu.org/software/libredwg/
-BuildRequires:	autoconf >= 2.61
+BuildRequires:	autoconf >= 2.69
 BuildRequires:	automake >= 1:1.14
 BuildRequires:	bash
 BuildRequires:	doxygen
@@ -100,10 +104,7 @@ Interfejs Pythona do biblioteki LibreDWG.
 %patch1 -p1
 
 # no git-version-gen in release tarball
-%{__sed} -i -e 's/m4_esyscmd.*git-version-gen.*/[%{version}],/' configure.ac
-
-# disable when not running tests
-%{__sed} -i -e '/^check_PROGRAMS/ s/ llvmfuzz_standalone//' examples/Makefile.am
+%{__sed} -i -e 's/m4_esyscmd(.*git-version-gen.*)/%{version},/' configure.ac
 
 %build
 %{__libtoolize}
@@ -113,9 +114,10 @@ Interfejs Pythona do biblioteki LibreDWG.
 %{__automake}
 %configure \
 	--disable-silent-rules \
+	%{?with_static_libs:--enable-static} \
 	--with-perl-install=vendor
 
-# programs/dwg2ps.1 is missing in dist as of 0.12.5
+# programs/dwg2ps.1 is missing in dist as of 0.13.2
 %{__make} -C src
 %{__make} -C programs regen-man
 
@@ -135,9 +137,9 @@ rm -rf $RPM_BUILD_ROOT
 
 # just example, nothing really useful
 install -d $RPM_BUILD_ROOT%{_examplesdir}/python-libredwg-%{version}
-%{__mv} $RPM_BUILD_ROOT%{_datadir}/load_dwg.py $RPM_BUILD_ROOT%{_examplesdir}/python-libredwg-%{version}
+%{__mv} $RPM_BUILD_ROOT%{_datadir}/libredwg/load_dwg.py $RPM_BUILD_ROOT%{_examplesdir}/python-libredwg-%{version}
 # packaged as %doc
-%{__rm} $RPM_BUILD_ROOT%{_datadir}/dwgadd.example
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/libredwg/dwgadd.example*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -153,7 +155,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS README TODO examples/dwgadd.example
+%doc AUTHORS ChangeLog NEWS README TODO examples/dwgadd.example*
 %attr(755,root,root) %{_bindir}/dwg2SVG
 %attr(755,root,root) %{_bindir}/dwg2dxf
 %attr(755,root,root) %{_bindir}/dwg2ps
