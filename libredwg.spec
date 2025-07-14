@@ -100,8 +100,8 @@ Interfejs Pythona do biblioteki LibreDWG.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
+%patch -P0 -p1
+%patch -P1 -p1
 
 # no git-version-gen in release tarball
 %{__sed} -i -e 's/m4_esyscmd(.*git-version-gen.*)/%{version},/' configure.ac
