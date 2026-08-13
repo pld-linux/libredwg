@@ -13,6 +13,7 @@ Source0:	https://ftp.gnu.org/gnu/libredwg/%{name}-%{version}.tar.xz
 # Source0-md5:	f2929a35db8e74d304fd720ab96f5eee
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-python.patch
+Patch2:		config-update.patch
 URL:		http://www.gnu.org/software/libredwg/
 BuildRequires:	autoconf >= 2.69
 BuildRequires:	automake >= 1:1.14
@@ -102,6 +103,7 @@ Interfejs Pythona do biblioteki LibreDWG.
 %setup -q
 %patch -P0 -p1
 %patch -P1 -p1
+%patch -P2 -p1
 
 # no git-version-gen in release tarball
 %{__sed} -i -e 's/m4_esyscmd(.*git-version-gen.*)/%{version},/' configure.ac

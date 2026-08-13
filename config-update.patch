@@ -1,0 +1,43 @@
+From bc79b6445d44db5b5c755be343b728f7d175d932 Mon Sep 17 00:00:00 2001
+From: "Guilherme V. Favretto" <97709742+guifavretto@users.noreply.github.com>
+Date: Tue, 24 Mar 2026 19:43:57 -0300
+Subject: [PATCH] Fix compilation issues on modern systems with GCC
+
+In systems with modern glibc (like Arch Linux), including system
+headers before config.h could lead to _POSIX_C_SOURCE macro
+redefinition errors. Added include guards to config.h and a #ifndef
+protection for _POSIX_C_SOURCE to prevent this.
+
+* configure.ac: Add AH_TOP and AH_BOTTOM for CONFIG_H include guards.
+  Use AH_VERBATIM to wrap _POSIX_C_SOURCE in #ifndef.
+---
+ configure.ac | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 1148b6b8a4..d12af972ff 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -50,6 +50,9 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+ 
+ dnl create a config.h file (Automake will add -DHAVE_CONFIG_H)
+ AC_CONFIG_HEADERS([src/config.h])
++AH_TOP([#ifndef CONFIG_H
++#define CONFIG_H 1])
++AH_BOTTOM([#endif /* CONFIG_H */])
+ AC_MSG_CHECKING([git version])
+ AC_MSG_RESULT($PACKAGE_VERSION)
+ AC_MSG_CHECKING([so version-info])
+@@ -223,7 +226,11 @@ darwin*|macos*)
+     AC_DEFINE([_POSIX_C_SOURCE],[900000L],[Needed for all APPLE extensions])
+     ;;
+ *)
+-    AC_DEFINE([_POSIX_C_SOURCE],[200809L],[Needed for strdup])
++    AH_VERBATIM([_POSIX_C_SOURCE],
++[/* Needed for strdup */
++#ifndef _POSIX_C_SOURCE
++# define _POSIX_C_SOURCE 200809L
++#endif])
+     ;;
+ esac
+ case "$host_os" in
