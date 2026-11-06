@@ -5,15 +5,14 @@
 Summary:	LibreDWG - free implementation of the DWG file format
 Summary(pl.UTF-8):	LibreDWG - wolnodostępna implementacja formatu plików DWG
 Name:		libredwg
-Version:	0.13.3
-Release:	4
+Version:	0.14
+Release:	1
 License:	GPL v3+
 Group:		Libraries
 Source0:	https://ftp.gnu.org/gnu/libredwg/%{name}-%{version}.tar.xz
-# Source0-md5:	f2929a35db8e74d304fd720ab96f5eee
+# Source0-md5:	5dbca7fbb46ce3383c78fccebc8a734b
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-python.patch
-Patch2:		config-update.patch
 URL:		http://www.gnu.org/software/libredwg/
 BuildRequires:	autoconf >= 2.69
 BuildRequires:	automake >= 1:1.14
@@ -27,11 +26,11 @@ BuildRequires:	pcre2-16-devel
 BuildRequires:	perl-devel
 BuildRequires:	pkgconfig
 BuildRequires:	pslib-devel
-BuildRequires:	python-devel >= 1:2.7
+BuildRequires:	python3-devel >= 1:3.2
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sed >= 4.0
-BuildRequires:	swig-python >= 1.3.17
+BuildRequires:	swig-python >= 2
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	texinfo
 BuildRequires:	xz
@@ -53,7 +52,7 @@ CAD rozwijanego przez firmę AutoDesk.
 Summary:	Header files for LibreDWG library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki LibreDWG
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 # dwg.h file
 Conflicts:	libdwg-devel
 
@@ -67,7 +66,7 @@ Pliki nagłówkowe biblioteki LibreDWG.
 Summary:	Static LibreDWG library
 Summary(pl.UTF-8):	Statyczna biblioteka LibreDWG
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-devel%{?_isa} = %{version}-%{release}
 
 %description static
 Static LibreDWG library.
@@ -79,7 +78,7 @@ Statyczna biblioteka LibreDWG.
 Summary:	Perl interface for LibreDWG library
 Summary(pl.UTF-8):	Interfejs Perla do biblioteki LibreDWG
 Group:		Development/Languages/Perl
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description -n perl-libredwg
 Perl interface for LibreDWG library.
@@ -87,23 +86,25 @@ Perl interface for LibreDWG library.
 %description -n perl-libredwg -l pl.UTF-8
 Interfejs Perla do biblioteki LibreDWG.
 
-%package -n python-libredwg
+%package -n python3-libredwg
 Summary:	Python interface for LibreDWG library
 Summary(pl.UTF-8):	Interfejs Pythona do biblioteki LibreDWG
 Group:		Development/Languages/Perl
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+Obsoletes:	python-libredwg < 0.14
 
-%description -n python-libredwg
+%description -n python3-libredwg
 Python interface for LibreDWG library.
 
-%description -n python-libredwg -l pl.UTF-8
+%description -n python3-libredwg -l pl.UTF-8
 Interfejs Pythona do biblioteki LibreDWG.
 
 %prep
 %setup -q
 %patch -P0 -p1
 %patch -P1 -p1
-%patch -P2 -p1
+
+%{__sed} -i -e '1s,/usr/bin/env perl,%{__perl},' src/gen-dynapi.pl
 
 # no git-version-gen in release tarball
 %{__sed} -i -e 's/m4_esyscmd(.*git-version-gen.*)/%{version},/' configure.ac
@@ -115,14 +116,10 @@ Interfejs Pythona do biblioteki LibreDWG.
 %{__autoheader}
 %{__automake}
 %configure \
-	PYTHON="%{__python}" \
+	PYTHON="%{__python3}" \
 	--disable-silent-rules \
 	%{?with_static_libs:--enable-static} \
 	--with-perl-install=vendor
-
-# programs/dwg2ps.1 is missing in dist as of 0.13.2
-%{__make} -C src
-%{__make} -C programs regen-man
 
 %{__make}
 
@@ -135,8 +132,7 @@ rm -rf $RPM_BUILD_ROOT
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libredwg.la
 
-%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/_LibreDWG.la
-%py_postclean
+%{__rm} $RPM_BUILD_ROOT%{py3_sitedir}/_LibreDWG.la
 
 # just example, nothing really useful
 install -d $RPM_BUILD_ROOT%{_examplesdir}/python-libredwg-%{version}
@@ -172,8 +168,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/dwgwrite
 %attr(755,root,root) %{_bindir}/dxf2dwg
 %attr(755,root,root) %{_bindir}/dxfwrite
-%attr(755,root,root) %{_libdir}/libredwg.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libredwg.so.0
+%{_libdir}/libredwg.so.*.*.*
+%ghost %{_libdir}/libredwg.so.0
 %{_mandir}/man1/dwg2SVG.1*
 %{_mandir}/man1/dwg2dxf.1*
 %{_mandir}/man1/dwg2ps.1*
@@ -191,7 +187,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libredwg.so
+%{_libdir}/libredwg.so
 %{_includedir}/dwg.h
 %{_includedir}/dwg_api.h
 %{_pkgconfigdir}/libredwg.pc
@@ -206,10 +202,11 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorarch}/LibreDWG.pm
 %dir %{perl_vendorarch}/auto
 %dir %{perl_vendorarch}/auto/LibreDWG
-%attr(755,root,root) %{perl_vendorarch}/auto/LibreDWG/LibreDWG.so
+%{perl_vendorarch}/auto/LibreDWG/LibreDWG.so
 
-%files -n python-libredwg
+%files -n python3-libredwg
 %defattr(644,root,root,755)
-%attr(755,root,root) %{py_sitedir}/_LibreDWG.so
-%{py_sitescriptdir}/LibreDWG.py[co]
+%{py3_sitedir}/_LibreDWG.so
+%{py3_sitescriptdir}/LibreDWG.py
+%{py3_sitescriptdir}/__pycache__/LibreDWG.cpython-*.pyc
 %{_examplesdir}/python-libredwg-%{version}
